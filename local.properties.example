@@ -1,0 +1,45 @@
+# Local Configuration for AuraMusic
+# Copy this file to local.properties and fill in your actual values
+# DO NOT commit local.properties to version control
+
+# ============================================================================
+# API Keys (Get from respective services)
+# ============================================================================
+
+# Last.fm API Keys
+lastfm.api.key=YOUR_LASTFM_API_KEY_HERE
+lastfm.secret=YOUR_LASTFM_SECRET_HERE
+
+# ============================================================================
+# Release Keystore Configuration (for Google Play release builds)
+# ============================================================================
+
+# Path to release keystore (relative or absolute)
+release.keystore.path=app/keystore/release-key.jks
+
+# Keystore password (created during keystore generation)
+release.keystore.password=YOUR_KEYSTORE_PASSWORD_HERE
+
+# Key alias (default: auramusic-release)
+release.key.alias=auramusic-release
+
+# Key password (usually same as keystore password)
+release.key.password=YOUR_KEY_PASSWORD_HERE
+
+# ============================================================================
+# Firebase Configuration
+# ============================================================================
+
+# Firebase Web Client ID (from Firebase Console)
+firebase.web.client.id=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+
+# Firebase Android Client ID (from google-services.json)
+firebase.android.client.id=YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com
+
+# ============================================================================
+# Optional: Debug Keystore (overrides default Android debug keystore)
+# ============================================================================
+
+# debug.keystore.path=/path/to/debug.keystore
+# debug.keystore.password=android
+# debug.key.password=android

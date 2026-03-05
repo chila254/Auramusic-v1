@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include all app data in backups -->
+    <include domain="sharedpref" path="."/>
+    <include domain="database" path="."/>
+    <include domain="file" path="."/>
+    <exclude domain="sharedpref" path="device.xml"/>
+    <exclude domain="database" path="no_backup.db"/>
+</full-backup-content>

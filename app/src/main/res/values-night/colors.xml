@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Dark Theme Colors -->
+
+    <!-- Primary Colors -->
+    <color name="primary">#D0BCFF</color>
+    <color name="on_primary">#381E72</color>
+    <color name="primary_container">#4F378B</color>
+    <color name="on_primary_container">#EADDFF</color>
+
+    <!-- Secondary Colors -->
+    <color name="secondary">#CCC2DC</color>
+    <color name="on_secondary">#332D41</color>
+    <color name="secondary_container">#4A4458</color>
+    <color name="on_secondary_container">#E8DEF8</color>
+
+    <!-- Tertiary Colors -->
+    <color name="tertiary">#EFB8C8</color>
+    <color name="on_tertiary">#492532</color>
+    <color name="tertiary_container">#633B48</color>
+    <color name="on_tertiary_container">#FFD8E4</color>
+
+    <!-- Error Colors -->
+    <color name="error">#FFB4AB</color>
+    <color name="on_error">#690005</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFDAD6</color>
+
+    <!-- Background and Surface Colors -->
+    <color name="background">#141218</color>
+    <color name="on_background">#E6E1E5</color>
+    <color name="surface">#141218</color>
+    <color name="on_surface">#E6E1E5</color>
+    <color name="surface_variant">#49454F</color>
+    <color name="on_surface_variant">#CAC4D0</color>
+
+    <!-- Outline Colors -->
+    <color name="outline">#938F99</color>
+    <color name="outline_variant">#49454F</color>
+
+    <!-- Legacy colors for compatibility -->
+    <color name="colorPrimary">#D0BCFF</color>
+    <color name="colorPrimaryVariant">#4F378B</color>
+    <color name="colorOnPrimary">#381E72</color>
+    <color name="colorSecondary">#CCC2DC</color>
+    <color name="colorSecondaryVariant">#4A4458</color>
+    <color name="colorOnSecondary">#332D41</color>
+    <color name="colorAccent">#D0BCFF</color>
+    <color name="colorError">#FFB4AB</color>
+    <color name="colorOnError">#690005</color>
+</resources>
