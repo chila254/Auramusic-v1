@@ -60,7 +60,9 @@ app/persistent-debug.keystore
 # ^^^ think twice before removing this gitignore, it became so FUCKING
 # annoying to unstage this file every time i want to commit stuff
 
-# External native build folder generated in Android Studio 2.2 and later
+# Google Services JSON (contains sensitive API keys)
+app/google-services.json
+ folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 .cxx/
 
