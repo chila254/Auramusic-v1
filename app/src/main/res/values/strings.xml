@@ -572,7 +572,6 @@
     <string name="song_title_column">Song title column</string>
     <string name="youtube_url_column">YouTube URL column</string>
     <string name="column_label">Column %d</string>
-    <string name="none">None</string>
 
     <!-- Discord -->
     <string name="discord_integration">Discord Integration</string>
