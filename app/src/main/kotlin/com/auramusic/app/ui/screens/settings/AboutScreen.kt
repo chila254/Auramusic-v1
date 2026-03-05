@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -80,12 +81,13 @@ fun AboutScreen(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,
             colorFilter = ColorFilter.tint(
-                MaterialTheme.colorScheme.onBackground,
+                MaterialTheme.colorScheme.primary,
                 BlendMode.SrcIn
             ),
             modifier = Modifier
+                .size(96.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable { },
         )
 
@@ -176,7 +178,8 @@ fun AboutScreen(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.github),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -187,7 +190,8 @@ fun AboutScreen(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.paypal),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

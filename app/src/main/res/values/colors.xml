@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primary brand color - Red (AuraMusic theme) -->
+    <color name="primary">#FFED5564</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#FFFFDAD6</color>
+    <color name="on_primary_container">#FF410002</color>
+    
+    <!-- Secondary Colors -->
+    <color name="secondary">#FF755654</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+    <color name="secondary_container">#FFFFDAD6</color>
+    <color name="on_secondary_container">#FF2C1512</color>
+    
+    <!-- Tertiary Colors -->
+    <color name="tertiary">#FF705C2E</color>
+    <color name="on_tertiary">#FFFFFFFF</color>
+    <color name="tertiary_container">#FFF9E18C</color>
+    <color name="on_tertiary_container">#FF231B00</color>
+    
+    <!-- Background and Surface Colors -->
+    <color name="background">#FFFFFBFF</color>
+    <color name="on_background">#FF201A19</color>
+    <color name="surface">#FFFFFBFF</color>
+    <color name="on_surface">#FF201A19</color>
+    <color name="surface_variant">#FFF5DDED</color>
+    <color name="on_surface_variant">#FF534341</color>
+    
+    <!-- Error Colors -->
+    <color name="error">#FFBA1A1A</color>
+    <color name="on_error">#FFFFFFFF</color>
+    <color name="error_container">#FFFFDAD6</color>
+    <color name="on_error_container">#FF410002</color>
+    
+    <!-- Legacy colors for compatibility -->
+    <color name="colorPrimary">#FFED5564</color>
+    <color name="colorPrimaryVariant">#FFCRASH</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="colorAccent">#FFED5564</color>
+    
+    <!-- Legacy colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

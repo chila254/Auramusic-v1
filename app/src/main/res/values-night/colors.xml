@@ -3,22 +3,22 @@
     <!-- Material 3 Dark Theme Colors -->
 
     <!-- Primary Colors -->
-    <color name="primary">#D0BCFF</color>
-    <color name="on_primary">#381E72</color>
-    <color name="primary_container">#4F378B</color>
-    <color name="on_primary_container">#EADDFF</color>
+    <color name="primary">#FFFFB4AB</color>
+    <color name="on_primary">#FF690005</color>
+    <color name="primary_container">#FF93000A</color>
+    <color name="on_primary_container">#FFFFDAD6</color>
 
     <!-- Secondary Colors -->
-    <color name="secondary">#CCC2DC</color>
-    <color name="on_secondary">#332D41</color>
-    <color name="secondary_container">#4A4458</color>
-    <color name="on_secondary_container">#E8DEF8</color>
+    <color name="secondary">#FFD7C3BE</color>
+    <color name="on_secondary">#FF41332C</color>
+    <color name="secondary_container">#FF594942</color>
+    <color name="on_secondary_container">#FFF4DDED</color>
 
     <!-- Tertiary Colors -->
-    <color name="tertiary">#EFB8C8</color>
-    <color name="on_tertiary">#492532</color>
-    <color name="tertiary_container">#633B48</color>
-    <color name="on_tertiary_container">#FFD8E4</color>
+    <color name="tertiary">#FFE3BF7C</color>
+    <color name="on_tertiary">#FF3E2E00</color>
+    <color name="tertiary_container">#FF594400</color>
+    <color name="on_tertiary_container">#FFFFE18C</color>
 
     <!-- Error Colors -->
     <color name="error">#FFB4AB</color>
@@ -39,13 +39,13 @@
     <color name="outline_variant">#49454F</color>
 
     <!-- Legacy colors for compatibility -->
-    <color name="colorPrimary">#D0BCFF</color>
-    <color name="colorPrimaryVariant">#4F378B</color>
-    <color name="colorOnPrimary">#381E72</color>
-    <color name="colorSecondary">#CCC2DC</color>
-    <color name="colorSecondaryVariant">#4A4458</color>
-    <color name="colorOnSecondary">#332D41</color>
-    <color name="colorAccent">#D0BCFF</color>
-    <color name="colorError">#FFB4AB</color>
-    <color name="colorOnError">#690005</color>
+    <color name="colorPrimary">#FFFFB4AB</color>
+    <color name="colorPrimaryVariant">#FF93000A</color>
+    <color name="colorOnPrimary">#FF690005</color>
+    <color name="colorSecondary">#FFD7C3BE</color>
+    <color name="colorSecondaryVariant">#FF594942</color>
+    <color name="colorOnSecondary">#FF41332C</color>
+    <color name="colorAccent">#FFFFB4AB</color>
+    <color name="colorError">#FFBA1A1A</color>
+    <color name="colorOnError">#FFFFFFFF</color>
 </resources>
