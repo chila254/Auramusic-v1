@@ -1,31 +1,37 @@
-# Auramusic 🎵
+# Auramusic
 
 A modern Android music player with YouTube Music integration, powerful audio features, and a beautiful Material 3 interface.
 
-[![Android](https://img.shields.io/badge/Android-26%2B-green?style=flat&logo=android)](https://www.android.com/)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.3-blue?style=flat&logo=kotlin)](https://kotlinlang.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)](LICENSE)
+<div align="center">
+
+![Android](https://img.shields.io/badge/Android-26%2B-2?style=for-the-badge&logo=android)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.3-7F52FF?style=for-the-badge&logo=kotlin)
+![Compose](https://img.shields.io/badge/Compose-Latest-4285F4?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-4CAF50?style=for-the-badge)
+
+</div>
 
 ## Features
 
-- 🎵 YouTube Music streaming & local playback
-- 🎨 Material 3 design with dynamic theming
-- 🔊 Advanced audio controls (EQ, normalization, tempo/pitch)
-- 📥 Offline downloads
-- 🎤 Live lyrics from multiple sources
-- 📡 Discord Rich Presence
-- 👥 Listen Together (collaborative listening)
-- 🔍 Multi-source search
-- 🌙 Light/Dark/Black themes
+| Category | Description |
+|----------|-------------|
+| **Playback** | Background playback, audio normalization, tempo/pitch adjustment, skip silence |
+| **Streaming** | YouTube Music integration, offline downloads |
+| **Customization** | Material 3 design, dynamic theming, light/dark/black themes |
+| **Audio** | Equalizer, audio focus handling |
+| **Social** | Discord Rich Presence, Listen Together (collaborative) |
+| **Search** | Multi-source search across platforms |
+| **Lyrics** | Live lyrics from Kugou, LRCLib, YouTube |
 
 ## Tech Stack
 
-- Kotlin + Jetpack Compose
-- Material 3 Design
-- Media3 ExoPlayer
-- Hilt Dependency Injection
-- Room Database
-- Ktor Networking
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material 3
+- **Audio:** Media3 ExoPlayer
+- **DI:** Hilt
+- **Database:** Room
+- **Networking:** Ktor
+- **Image Loading:** Coil
 
 ## Requirements
 
@@ -36,15 +42,14 @@ A modern Android music player with YouTube Music integration, powerful audio fea
 ## Quick Start
 
 ```bash
-# Clone
+# Clone the repository
 git clone https://github.com/chila254/Auramusic-v1.git
 cd Auramusic-v1
 
 # Setup API keys (optional)
 cp local.properties.example local.properties
-# Edit local.properties with your LastFM keys
 
-# Build
+# Build debug APK
 ./gradlew assembleDebug
 ```
 
@@ -52,13 +57,15 @@ cp local.properties.example local.properties
 
 | Variant | Description |
 |---------|-------------|
-| `foss` | F-Droid compatible, no GMS |
+| `foss` | F-Droid compatible, no Google Play Services |
 | `gms` | With Google Cast support |
+
+**ABI Variants:** universal, arm64, armeabi, x86, x86_64
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ by [chila254](https://github.com/chila254)**
+**Developed by [chila254](https://github.com/chila254)**
