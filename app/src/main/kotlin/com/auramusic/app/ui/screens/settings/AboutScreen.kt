@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -78,12 +79,16 @@ fun AboutScreen(
         Spacer(Modifier.height(4.dp))
 
         Image(
-            painter = painterResource(R.drawable.app_logo),
+            painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,
+            colorFilter = ColorFilter.tint(
+                Color.White,
+                BlendMode.SrcIn
+            ),
             modifier = Modifier
-                .size(120.dp)
+                .size(96.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.primary)
                 .clickable { },
         )
 
