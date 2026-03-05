@@ -171,30 +171,53 @@ fun AboutScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        Row {
-            IconButton(
-                onClick = {
-                    uriHandler.openUri("https://github.com/chila254/Auramusic-v1")
-                },
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.github),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+        Spacer(Modifier.height(8.dp))
 
-            IconButton(
-                onClick = {
+        // GitHub link
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable {
+                    uriHandler.openUri("https://github.com/chila254/Auramusic-v1")
+                }
+                .padding(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.github),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = "GitHub",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        // PayPal link
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .clickable {
                     uriHandler.openUri("https://paypal.me/franklinfinyage")
                 }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.paypal),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+                .padding(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.paypal),
+                contentDescription = null,
+                modifier = Modifier.size(28.dp)
+            )
+            Spacer(Modifier.width(12.dp))
+            Text(
+                text = "PayPal",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
 
         Spacer(Modifier.height(32.dp))
