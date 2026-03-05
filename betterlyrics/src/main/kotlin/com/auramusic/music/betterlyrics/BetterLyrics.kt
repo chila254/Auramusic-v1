@@ -1,4 +1,4 @@
-package com.metrolist.music.betterlyrics
+package com.auramusic.music.betterlyrics
 
 import com.metrolist.music.betterlyrics.models.TTMLResponse
 import io.ktor.client.HttpClient

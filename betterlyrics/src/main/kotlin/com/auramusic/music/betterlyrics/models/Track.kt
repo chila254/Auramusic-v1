@@ -1,4 +1,4 @@
-package com.metrolist.music.betterlyrics.models
+package com.auramusic.music.betterlyrics.models
 
 import kotlinx.serialization.Serializable
 
