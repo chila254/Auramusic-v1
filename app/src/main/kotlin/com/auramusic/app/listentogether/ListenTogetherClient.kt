@@ -759,14 +759,6 @@ class ListenTogetherClient @Inject constructor(
         log(LogLevel.DEBUG, "Received message", "${data.size} bytes")
         
         try {
-            // Detect format and auto-upgrade codec if needed
-            val detectedFormat = MessageCodec.detectMessageFormat(data)
-            if (detectedFormat == MessageFormat.PROTOBUF && codec.format == MessageFormat.JSON) {
-                codec.format = MessageFormat.PROTOBUF
-                codec.compressionEnabled = true
-                log(LogLevel.INFO, "Upgraded to Protobuf", "with compression")
-            }
-            
             // Decode message
             val (msgType, payloadBytes) = codec.decode(data)
             

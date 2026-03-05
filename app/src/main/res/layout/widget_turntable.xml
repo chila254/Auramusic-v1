@@ -22,6 +22,11 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Play/Pause" />
 
+    <FrameLayout
+        android:id="@+id/widget_turntable_play_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ImageButton
         android:id="@+id/widget_turntable_prev_button"
         android:layout_width="36dp"

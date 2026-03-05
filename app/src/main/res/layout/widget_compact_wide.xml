@@ -45,16 +45,24 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/widget_wide_play_pause"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+    <LinearLayout
+        android:id="@+id/widget_wide_play_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toStartOf="@id/widget_wide_like_button"
         android:layout_centerVertical="true"
         android:layout_marginEnd="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="6dp"
-        android:src="@drawable/ic_widget_play_low" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/widget_wide_play_pause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="6dp"
+            android:src="@drawable/ic_widget_play_low" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/widget_wide_like_button"

@@ -1,7 +1,7 @@
 package com.auramusic.app.playback
 
 import android.content.Context
-import androidx.media3.common.MediaMetadata
+import com.auramusic.app.models.MediaMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
