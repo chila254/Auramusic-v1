@@ -2,6 +2,10 @@
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.kts.
 
+# Ignore missing service warnings
+-dontwarn javax.script.**
+-dontwarn META-INF/services/**
+
 # Keep Kotlin metadata
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
