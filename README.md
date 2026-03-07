@@ -92,8 +92,6 @@ GNU General Public License v3.0 (GPL-3.0) - see [LICENSE](LICENSE) file
 
 The open-source community for tools, libraries, and APIs that make this project possible.
 
-<sub>Thank you to all the amazing developers who made this project possible!</sub>
-
 ---
 
 **Developed by [chila254](https://github.com/chila254)**
