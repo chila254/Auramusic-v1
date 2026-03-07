@@ -24,17 +24,6 @@ object BetterLyricsProvider : LyricsProvider {
         album: String?,
     ): Result<String> = BetterLyrics.getLyrics(title, artist, duration, album)
 
-    /**
-     * Get raw TTML lyrics ( ArchiveTune approach)
-     * This returns the raw TTML format for the UI to handle parsing
-     */
-    suspend fun getRawTTML(
-        title: String,
-        artist: String,
-        duration: Int,
-        album: String?,
-    ): Result<String> = BetterLyrics.getRawTTML(title, artist, duration, album)
-
     override suspend fun getAllLyrics(
         id: String,
         title: String,

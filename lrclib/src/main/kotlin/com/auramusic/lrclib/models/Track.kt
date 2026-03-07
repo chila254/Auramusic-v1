@@ -13,7 +13,6 @@ data class Track(
     val syncedLyrics: String?,
 )
 
-// ArchiveTune approach: tight duration matching (±2 seconds)
 internal fun List<Track>.bestMatchingFor(duration: Int): Track? {
     if (isEmpty()) return null
 
@@ -23,6 +22,26 @@ internal fun List<Track>.bestMatchingFor(duration: Int): Track? {
 
     return minByOrNull { abs(it.duration.toInt() - duration) }
         ?.takeIf { abs(it.duration.toInt() - duration) <= 2 }
+}
+
+// Relaxed matching with ±5 seconds tolerance
+internal fun List<Track>.bestMatchingForRelaxed(duration: Int): Track? {
+    if (isEmpty()) return null
+
+    if (duration == -1) {
+        return firstOrNull { it.syncedLyrics != null } ?: firstOrNull()
+    }
+
+    // First try to find synced lyrics within tolerance
+    val syncedMatch = filter { it.syncedLyrics != null }
+        .minByOrNull { abs(it.duration.toInt() - duration) }
+        ?.takeIf { abs(it.duration.toInt() - duration) <= 5 }
+    
+    if (syncedMatch != null) return syncedMatch
+    
+    // Fall back to any lyrics within tolerance
+    return minByOrNull { abs(it.duration.toInt() - duration) }
+        ?.takeIf { abs(it.duration.toInt() - duration) <= 5 }
 }
 
 internal fun List<Track>.bestMatchingFor(
@@ -39,8 +58,8 @@ internal fun List<Track>.bestMatchingFor(
         return firstOrNull { it.syncedLyrics != null } ?: firstOrNull()
     }
 
-    // ArchiveTune approach: tight duration matching (±2 seconds)
-    return bestMatchingFor(duration)
+    // Use relaxed matching for duration-based search
+    return bestMatchingForRelaxed(duration)
 }
 
 private fun List<Track>.findBestMatch(trackName: String, artistName: String): Track? {

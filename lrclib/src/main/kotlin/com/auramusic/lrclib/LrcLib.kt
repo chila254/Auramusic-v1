@@ -2,6 +2,7 @@ package com.auramusic.lrclib
 
 import com.auramusic.lrclib.models.Track
 import com.auramusic.lrclib.models.bestMatchingFor
+import com.auramusic.lrclib.models.bestMatchingForRelaxed
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -39,53 +40,124 @@ object LrcLib {
         }
     }
 
-    /**
-     * Query lyrics - ArchiveTune simplified approach (no title/artist cleanup)
-     */
-    private suspend fun queryLyrics(
+    // Patterns to clean from title
+    private val titleCleanupPatterns = listOf(
+        Regex("""\s*\(.*?(official|video|audio|lyrics|lyric|visualizer|hd|hq|4k|remaster|remix|live|acoustic|version|edit|extended|radio|clean|explicit).*?\)""", RegexOption.IGNORE_CASE),
+        Regex("""\s*\[.*?(official|video|audio|lyrics|lyric|visualizer|hd|hq|4k|remaster|remix|live|acoustic|version|edit|extended|radio|clean|explicit).*?\]""", RegexOption.IGNORE_CASE),
+        Regex("""\s*【.*?】"""),
+        Regex("""\s*\|.*$"""),
+        Regex("""\s*-\s*(official|video|audio|lyrics|lyric|visualizer).*$""", RegexOption.IGNORE_CASE),
+        Regex("""\s*\(feat\..*?\)""", RegexOption.IGNORE_CASE),
+        Regex("""\s*\(ft\..*?\)""", RegexOption.IGNORE_CASE),
+        Regex("""\s*feat\..*$""", RegexOption.IGNORE_CASE),
+        Regex("""\s*ft\..*$""", RegexOption.IGNORE_CASE),
+    )
+
+    // Patterns to extract primary artist
+    private val artistSeparators = listOf(" & ", " and ", ", ", " x ", " X ", " feat. ", " feat ", " ft. ", " ft ", " featuring ", " with ")
+
+    private fun cleanTitle(title: String): String {
+        var cleaned = title.trim()
+        for (pattern in titleCleanupPatterns) {
+            cleaned = cleaned.replace(pattern, "")
+        }
+        return cleaned.trim()
+    }
+
+    private fun cleanArtist(artist: String): String {
+        var cleaned = artist.trim()
+        // Get primary artist (first one before any separator)
+        for (separator in artistSeparators) {
+            if (cleaned.contains(separator, ignoreCase = true)) {
+                cleaned = cleaned.split(separator, ignoreCase = true, limit = 2)[0]
+                break
+            }
+        }
+        return cleaned.trim()
+    }
+
+    private suspend fun queryLyricsWithParams(
         trackName: String? = null,
         artistName: String? = null,
         albumName: String? = null,
+        query: String? = null,
     ): List<Track> = runCatching {
         client.get("/api/search") {
+            if (query != null) parameter("q", query)
             if (trackName != null) parameter("track_name", trackName)
             if (artistName != null) parameter("artist_name", artistName)
             if (albumName != null) parameter("album_name", albumName)
         }.body<List<Track>>()
     }.getOrDefault(emptyList())
 
-    private suspend fun queryLyricsWithQuery(
-        query: String,
-    ): List<Track> = runCatching {
-        client.get("/api/search") {
-            parameter("q", query)
-        }.body<List<Track>>()
-    }.getOrDefault(emptyList())
+    private suspend fun queryLyrics(
+        artist: String,
+        title: String,
+        album: String? = null,
+    ): List<Track> {
+        val cleanedTitle = cleanTitle(title)
+        val cleanedArtist = cleanArtist(artist)
+        
+        // Strategy 1: Search with cleaned title and artist
+        var results = queryLyricsWithParams(
+            trackName = cleanedTitle,
+            artistName = cleanedArtist,
+            albumName = album
+        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        
+        if (results.isNotEmpty()) return results
+        
+        // Strategy 2: Search with cleaned title only (artist might be different)
+        results = queryLyricsWithParams(
+            trackName = cleanedTitle
+        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        
+        if (results.isNotEmpty()) return results
+        
+        // Strategy 3: Use q parameter with combined search
+        results = queryLyricsWithParams(
+            query = "$cleanedArtist $cleanedTitle"
+        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        
+        if (results.isNotEmpty()) return results
+        
+        // Strategy 4: Use q parameter with just title
+        results = queryLyricsWithParams(
+            query = cleanedTitle
+        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        
+        if (results.isNotEmpty()) return results
+        
+        // Strategy 5: Try original title if different from cleaned
+        if (cleanedTitle != title.trim()) {
+            results = queryLyricsWithParams(
+                trackName = title.trim(),
+                artistName = artist.trim()
+            ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        }
+        
+        return results
+    }
 
-    /**
-     * Get lyrics - ArchiveTune approach with tighter duration matching (±2 seconds)
-     */
     suspend fun getLyrics(
         title: String,
         artist: String,
         duration: Int,
         album: String? = null,
     ) = runCatching {
-        val tracks = queryLyrics(
-            trackName = title,
-            artistName = artist,
-            albumName = album
-        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
+        val tracks = queryLyrics(artist, title, album)
+        val cleanedTitle = cleanTitle(title)
+        val cleanedArtist = cleanArtist(artist)
 
         val res = when {
             duration == -1 -> {
-                tracks.bestMatchingFor(duration, title, artist)?.let { track ->
+                tracks.bestMatchingFor(duration, cleanedTitle, cleanedArtist)?.let { track ->
                     track.syncedLyrics ?: track.plainLyrics
                 }?.let(LrcLib::Lyrics)
             }
             else -> {
-                // ArchiveTune approach: tight duration matching (±2 seconds)
-                tracks.bestMatchingFor(duration)?.let { track ->
+                // Try with relaxed duration matching (±5 seconds instead of ±2)
+                tracks.bestMatchingForRelaxed(duration)?.let { track ->
                     track.syncedLyrics ?: track.plainLyrics
                 }?.let(LrcLib::Lyrics)
             }
@@ -98,9 +170,6 @@ object LrcLib {
         }
     }
 
-    /**
-     * Get all lyrics - ArchiveTune approach with tighter duration matching (±2 seconds)
-     */
     suspend fun getAllLyrics(
         title: String,
         artist: String,
@@ -108,12 +177,9 @@ object LrcLib {
         album: String? = null,
         callback: (String) -> Unit,
     ) {
-        val tracks = queryLyrics(
-            trackName = title,
-            artistName = artist,
-            albumName = album
-        ).filter { it.syncedLyrics != null || it.plainLyrics != null }
-
+        val tracks = queryLyrics(artist, title, album)
+        val cleanedTitle = cleanTitle(title)
+        val cleanedArtist = cleanArtist(artist)
         var count = 0
         var plain = 0
 
@@ -124,10 +190,10 @@ object LrcLib {
 
                     if (track.syncedLyrics != null) score += 1.0
 
-                    val titleSimilarity = calculateStringSimilarity(title, track.trackName)
-                    val artistSimilarity = calculateStringSimilarity(artist, track.artistName)
+                    val titleSimilarity = calculateStringSimilarity(cleanedTitle, track.trackName)
+                    val artistSimilarity = calculateStringSimilarity(cleanedArtist, track.artistName)
                     score += (titleSimilarity + artistSimilarity) / 2.0
-
+                    
                     score
                 }
             }
@@ -143,12 +209,12 @@ object LrcLib {
                     count++
                     track.syncedLyrics.let(callback)
                 } else {
-                    // ArchiveTune approach: tight duration matching (±2 seconds)
-                    if (track.syncedLyrics != null && abs(track.duration.toInt() - duration) <= 2) {
+                    // Relaxed duration matching (±5 seconds)
+                    if (track.syncedLyrics != null && abs(track.duration.toInt() - duration) <= 5) {
                         count++
                         track.syncedLyrics.let(callback)
                     }
-                    if (track.plainLyrics != null && abs(track.duration.toInt() - duration) <= 2 && plain == 0) {
+                    if (track.plainLyrics != null && abs(track.duration.toInt() - duration) <= 5 && plain == 0) {
                         count++
                         plain++
                         track.plainLyrics.let(callback)
@@ -161,10 +227,10 @@ object LrcLib {
     private fun calculateStringSimilarity(str1: String, str2: String): Double {
         val s1 = str1.trim().lowercase()
         val s2 = str2.trim().lowercase()
-
+        
         if (s1 == s2) return 1.0
         if (s1.isEmpty() || s2.isEmpty()) return 0.0
-
+        
         return when {
             s1.contains(s2) || s2.contains(s1) -> 0.8
             else -> {
@@ -179,10 +245,10 @@ object LrcLib {
         val len1 = str1.length
         val len2 = str2.length
         val matrix = Array(len1 + 1) { IntArray(len2 + 1) }
-
+        
         for (i in 0..len1) matrix[i][0] = i
         for (j in 0..len2) matrix[0][j] = j
-
+        
         for (i in 1..len1) {
             for (j in 1..len2) {
                 val cost = if (str1[i - 1] == str2[j - 1]) 0 else 1
@@ -193,7 +259,7 @@ object LrcLib {
                 )
             }
         }
-
+        
         return matrix[len1][len2]
     }
 
@@ -201,7 +267,7 @@ object LrcLib {
         artist: String,
         title: String,
     ) = runCatching {
-        queryLyrics(artistName = artist, trackName = title, albumName = null)
+        queryLyrics(artist = artist, title = title, album = null)
     }
 
     @JvmInline

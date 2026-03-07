@@ -14,9 +14,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object BetterLyrics {
-    // Logging capability - ArchiveTune approach
-    var logger: ((String) -> Unit)? = null
-
     private val client by lazy {
         HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -65,33 +62,9 @@ object BetterLyrics {
         if (response.status == HttpStatusCode.OK) {
             response.body<TTMLResponse>().ttml
         } else {
-            logger?.invoke("BetterLyrics: Request failed with status: ${response.status}")
             null
         }
     }.getOrNull()
-
-    /**
-     * Get raw TTML lyrics - ArchiveTune approach
-     * Returns the raw TTML format for the UI to handle parsing
-     */
-    suspend fun getRawTTML(
-        title: String,
-        artist: String,
-        duration: Int,
-        album: String? = null,
-    ): Result<String> = runCatching {
-        logger?.invoke("BetterLyrics: Fetching raw TTML for '$title' by '$artist'")
-        
-        val cleanTitle = title.trim()
-        val cleanArtist = artist.trim()
-        val cleanAlbum = album?.trim()
-
-        val ttml = fetchTTML(cleanArtist, cleanTitle, duration, cleanAlbum)
-            ?: throw IllegalStateException("Lyrics unavailable")
-        
-        logger?.invoke("BetterLyrics: Received TTML (length: ${ttml.length})")
-        ttml
-    }
 
     suspend fun getLyrics(
         title: String,
@@ -101,12 +74,9 @@ object BetterLyrics {
     ) = runCatching {
         // Use exact title and artist - no normalization to ensure correct sync
         // Normalizing can return wrong lyrics (e.g., radio edit vs original)
-        logger?.invoke("BetterLyrics: Fetching lyrics for '$title' by '$artist'")
-        
         val ttml = fetchTTML(artist, title, duration, album)
             ?: throw IllegalStateException("Lyrics unavailable")
         
-        logger?.invoke("BetterLyrics: Parsing TTML to LRC")
         val parsedLines = TTMLParser.parseTTML(ttml)
         if (parsedLines.isEmpty()) {
             throw IllegalStateException("Failed to parse lyrics")
@@ -124,11 +94,7 @@ object BetterLyrics {
     ) {
         getLyrics(title, artist, duration, album)
             .onSuccess { lrcString ->
-                logger?.invoke("BetterLyrics: Successfully fetched lyrics")
                 callback(lrcString)
-            }
-            .onFailure { error ->
-                logger?.invoke("BetterLyrics: Failed to fetch lyrics: ${error.message}")
             }
     }
 }
