@@ -6,11 +6,11 @@
 package com.auramusic.app.utils
 
 import com.auramusic.app.BuildConfig
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.concurrent.TimeUnit
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -31,7 +31,10 @@ data class ReleaseAsset(
 )
 
 object Updater {
-    private val client = HttpClient()
+    private val client = OkHttpClient.Builder()
+    .connectTimeout(30, TimeUnit.SECONDS)
+    .readTimeout(30, TimeUnit.SECONDS)
+    .build()
     var lastCheckTime = -1L
         private set
     
@@ -128,8 +131,10 @@ object Updater {
                     return@runCatching cachedReleaseInfo!!
                 }
                 
-                val response = client.get("$GITHUB_API_BASE/releases/latest")
-                    .bodyAsText()
+                val request = Request.Builder()
+                    .url("$GITHUB_API_BASE/releases/latest")
+                    .build()
+                val response = client.newCall(request).execute().body?.string() ?: ""
                 val json = JSONObject(response)
                 
                 val releaseInfo = ReleaseInfo(
@@ -161,8 +166,10 @@ object Updater {
                 var hasMore = true
                 
                 while (hasMore && page <= 10) { // Limit to 10 pages
-                    val response = client.get("$GITHUB_API_BASE/releases?page=$page&per_page=30")
-                        .bodyAsText()
+                    val request = Request.Builder()
+                        .url("$GITHUB_API_BASE/releases?page=$page&per_page=30")
+                        .build()
+                    val response = client.newCall(request).execute().body?.string() ?: ""
                     val json = JSONArray(response)
                     
                     if (json.length() == 0) {

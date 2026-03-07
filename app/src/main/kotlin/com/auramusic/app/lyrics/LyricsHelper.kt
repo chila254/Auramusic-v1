@@ -42,7 +42,6 @@ constructor(
             SimpMusicLyricsProvider,
             LrcLibLyricsProvider,
             KuGouLyricsProvider,
-            LyricsPlusProvider,
             YouTubeSubtitleLyricsProvider,
             YouTubeLyricsProvider
         )
@@ -64,8 +63,7 @@ constructor(
                             BetterLyricsProvider,
                             SimpMusicLyricsProvider,
                             KuGouLyricsProvider,
-                            LyricsPlusProvider,
-                            YouTubeSubtitleLyricsProvider,
+                                            YouTubeSubtitleLyricsProvider,
                             YouTubeLyricsProvider
                         )
                         PreferredLyricsProvider.KUGOU -> listOf(
@@ -73,8 +71,7 @@ constructor(
                             BetterLyricsProvider,
                             SimpMusicLyricsProvider,
                             LrcLibLyricsProvider,
-                            LyricsPlusProvider,
-                            YouTubeSubtitleLyricsProvider,
+                                            YouTubeSubtitleLyricsProvider,
                             YouTubeLyricsProvider
                         )
                         PreferredLyricsProvider.BETTER_LYRICS -> listOf(
@@ -82,8 +79,7 @@ constructor(
                             SimpMusicLyricsProvider,
                             LrcLibLyricsProvider,
                             KuGouLyricsProvider,
-                            LyricsPlusProvider,
-                            YouTubeSubtitleLyricsProvider,
+                                            YouTubeSubtitleLyricsProvider,
                             YouTubeLyricsProvider
                         )
                         PreferredLyricsProvider.SIMPMUSIC -> listOf(
@@ -91,13 +87,11 @@ constructor(
                             BetterLyricsProvider,
                             LrcLibLyricsProvider,
                             KuGouLyricsProvider,
-                            LyricsPlusProvider,
-                            YouTubeSubtitleLyricsProvider,
+                                            YouTubeSubtitleLyricsProvider,
                             YouTubeLyricsProvider
                         )
                         PreferredLyricsProvider.LYRICS_PLUS -> listOf(
-                            LyricsPlusProvider,
-                            BetterLyricsProvider,
+                                            BetterLyricsProvider,
                             SimpMusicLyricsProvider,
                             LrcLibLyricsProvider,
                             KuGouLyricsProvider,

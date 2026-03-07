@@ -16,7 +16,6 @@ object LyricsProviderRegistry {
         "SimpMusic" to SimpMusicLyricsProvider,
         "LrcLib" to LrcLibLyricsProvider,
         "KuGou" to KuGouLyricsProvider,
-        "LyricsPlus" to LyricsPlusProvider,
         "YouTubeSubtitle" to YouTubeSubtitleLyricsProvider,
         "YouTube" to YouTubeLyricsProvider,
     )
@@ -26,7 +25,6 @@ object LyricsProviderRegistry {
         "SimpMusic",
         "LrcLib",
         "KuGou",
-        "LyricsPlus",
         "YouTubeSubtitle",
         "YouTube",
     )
