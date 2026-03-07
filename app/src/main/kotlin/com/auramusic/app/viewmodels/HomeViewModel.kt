@@ -24,6 +24,7 @@ import com.auramusic.app.constants.InnerTubeCookieKey
 import com.auramusic.app.constants.QuickPicks
 import com.auramusic.app.constants.QuickPicksKey
 import com.auramusic.app.constants.ShowWrappedCardKey
+import com.auramusic.app.constants.LastWrappedMonthKey
 import com.auramusic.app.constants.WrappedSeenKey
 import com.auramusic.app.db.MusicDatabase
 import com.auramusic.app.db.entities.Album
@@ -85,10 +86,11 @@ class HomeViewModel @Inject constructor(
 
 	val showWrappedCard: StateFlow<Boolean> = context.dataStore.data.map { prefs ->
         val showWrappedPref = prefs[ShowWrappedCardKey] ?: false
-        val seen = prefs[WrappedSeenKey] ?: false
-        val isBeforeDate = LocalDate.now().isBefore(LocalDate.of(2026, 2, 1))
+        val lastWrappedMonth = prefs[LastWrappedMonthKey]
+        val currentMonth = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM"))
+        val isNewMonth = lastWrappedMonth != currentMonth
 
-        isBeforeDate && (!seen || showWrappedPref)
+        isNewMonth || showWrappedPref
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     val wrappedSeen: StateFlow<Boolean> = context.dataStore.data.map { prefs ->
@@ -98,7 +100,8 @@ class HomeViewModel @Inject constructor(
     fun markWrappedAsSeen() {
         viewModelScope.launch(Dispatchers.IO) {
             context.dataStore.edit {
-                it[WrappedSeenKey] = true
+                val currentMonth = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM"))
+                it[LastWrappedMonthKey] = currentMonth
             }
         }
     }
