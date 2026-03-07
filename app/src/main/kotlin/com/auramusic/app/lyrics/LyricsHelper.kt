@@ -134,12 +134,13 @@ constructor(
 
         val scope = CoroutineScope(SupervisorJob())
         val deferred = scope.async {
+            val cleanedTitle = LyricsUtils.cleanTitleForSearch(mediaMetadata.title)
             for (provider in lyricsProviders) {
                 if (provider.isEnabled(context)) {
                     try {
                         val result = provider.getLyrics(
                             mediaMetadata.id,
-                            mediaMetadata.title,
+                            cleanedTitle,
                             mediaMetadata.artists.joinToString { it.name },
                             mediaMetadata.duration,
                             mediaMetadata.album?.title,
@@ -199,10 +200,11 @@ constructor(
 
         val allResult = mutableListOf<LyricsResult>()
         currentLyricsJob = CoroutineScope(SupervisorJob()).launch {
+            val cleanedTitle = LyricsUtils.cleanTitleForSearch(songTitle)
             lyricsProviders.forEach { provider ->
                 if (provider.isEnabled(context)) {
                     try {
-                        provider.getAllLyrics(mediaId, songTitle, songArtists, duration, album, setVideoId) { lyrics ->
+                        provider.getAllLyrics(mediaId, cleanedTitle, songArtists, duration, album, setVideoId) { lyrics ->
                             val result = LyricsResult(provider.name, lyrics)
                             allResult += result
                             callback(result)
