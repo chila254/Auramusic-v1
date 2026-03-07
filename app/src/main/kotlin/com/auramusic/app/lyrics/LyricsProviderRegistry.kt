@@ -18,6 +18,7 @@ object LyricsProviderRegistry {
         "KuGou" to KuGouLyricsProvider,
         "LyricsPlus" to LyricsPlusProvider,
         "YouTubeSubtitle" to YouTubeSubtitleLyricsProvider,
+        "YouTube" to YouTubeLyricsProvider,
     )
 
     val defaultProviderOrder = listOf(
@@ -27,9 +28,15 @@ object LyricsProviderRegistry {
         "KuGou",
         "LyricsPlus",
         "YouTubeSubtitle",
+        "YouTube",
     )
 
     fun getProviderByName(name: String): LyricsProvider? = providers[name]
+
+    fun getOrderedProviders(orderString: String): List<LyricsProvider> {
+        val order = deserializeProviderOrder(orderString)
+        return order.mapNotNull { getProviderByName(it) }
+    }
 
     fun getProviderOrder(): List<String> = defaultProviderOrder
 
