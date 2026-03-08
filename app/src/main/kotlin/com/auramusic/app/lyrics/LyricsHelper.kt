@@ -34,8 +34,8 @@ constructor(
     @ApplicationContext private val context: Context,
     private val networkConnectivity: NetworkConnectivityObserver,
 ) {
-    // Initialize with default providers - will be updated by the Flow when preferences are loaded
-    private var lyricsProviders: List<LyricsProvider> =
+    // Initialize with default providers
+    private var lyricsProviders =
         listOf(
             BetterLyricsProvider,
             SimpMusicLyricsProvider,
@@ -50,10 +50,10 @@ constructor(
             .map { preferences ->
                 val providerOrder = preferences[LyricsProviderOrderKey] ?: ""
                 if (providerOrder.isNotBlank()) {
-                    // Use custom order from drag-and-drop
+                    // Use the new provider order if available
                     LyricsProviderRegistry.getOrderedProviders(providerOrder)
                 } else {
-                    // Fall back to preferred provider logic
+                    // Fall back to preferred provider logic for backward compatibility
                     val preferredProvider = preferences[PreferredLyricsProviderKey]
                         .toEnum(PreferredLyricsProvider.LRCLIB)
                     when (preferredProvider) {
@@ -127,7 +127,8 @@ constructor(
             for (provider in lyricsProviders) {
                 if (provider.isEnabled(context)) {
                     try {
-                        Timber.tag("LyricsHelper").d("Trying provider: ${provider.name} for $cleanedTitle")
+                        Timber.tag("LyricsHelper")
+                            .d("Trying provider: ${provider.name} for $cleanedTitle")
                         val result = provider.getLyrics(
                             mediaMetadata.id,
                             cleanedTitle,
