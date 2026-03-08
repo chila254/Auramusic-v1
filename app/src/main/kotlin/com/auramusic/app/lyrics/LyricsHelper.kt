@@ -45,56 +45,60 @@ constructor(
             YouTubeLyricsProvider
         )
 
-    val preferred =
-        context.dataStore.data
-            .map { preferences ->
-                val providerOrder = preferences[LyricsProviderOrderKey] ?: ""
-                if (providerOrder.isNotBlank()) {
-                    // Use the new provider order if available
-                    LyricsProviderRegistry.getOrderedProviders(providerOrder)
-                } else {
-                    // Fall back to preferred provider logic for backward compatibility
-                    val preferredProvider = preferences[PreferredLyricsProviderKey]
-                        .toEnum(PreferredLyricsProvider.LRCLIB)
-                    when (preferredProvider) {
-                        PreferredLyricsProvider.LRCLIB -> listOf(
-                            LrcLibLyricsProvider,
-                            BetterLyricsProvider,
-                            SimpMusicLyricsProvider,
-                            KuGouLyricsProvider,
-                            YouTubeSubtitleLyricsProvider,
-                            YouTubeLyricsProvider
-                        )
-                        PreferredLyricsProvider.KUGOU -> listOf(
-                            KuGouLyricsProvider,
-                            BetterLyricsProvider,
-                            SimpMusicLyricsProvider,
-                            LrcLibLyricsProvider,
-                            YouTubeSubtitleLyricsProvider,
-                            YouTubeLyricsProvider
-                        )
-                        PreferredLyricsProvider.BETTER_LYRICS -> listOf(
-                            BetterLyricsProvider,
-                            SimpMusicLyricsProvider,
-                            LrcLibLyricsProvider,
-                            KuGouLyricsProvider,
-                            YouTubeSubtitleLyricsProvider,
-                            YouTubeLyricsProvider
-                        )
-                        PreferredLyricsProvider.SIMPMUSIC -> listOf(
-                            SimpMusicLyricsProvider,
-                            BetterLyricsProvider,
-                            LrcLibLyricsProvider,
-                            KuGouLyricsProvider,
-                            YouTubeSubtitleLyricsProvider,
-                            YouTubeLyricsProvider
-                        )
+    init {
+        // Collect the flow to update lyricsProviders when preferences change
+        CoroutineScope(SupervisorJob()).launch {
+            context.dataStore.data
+                .map { preferences ->
+                    val providerOrder = preferences[LyricsProviderOrderKey] ?: ""
+                    if (providerOrder.isNotBlank()) {
+                        // Use the new provider order if available
+                        LyricsProviderRegistry.getOrderedProviders(providerOrder)
+                    } else {
+                        // Fall back to preferred provider logic for backward compatibility
+                        val preferredProvider = preferences[PreferredLyricsProviderKey]
+                            .toEnum(PreferredLyricsProvider.LRCLIB)
+                        when (preferredProvider) {
+                            PreferredLyricsProvider.LRCLIB -> listOf(
+                                LrcLibLyricsProvider,
+                                BetterLyricsProvider,
+                                SimpMusicLyricsProvider,
+                                KuGouLyricsProvider,
+                                YouTubeSubtitleLyricsProvider,
+                                YouTubeLyricsProvider
+                            )
+                            PreferredLyricsProvider.KUGOU -> listOf(
+                                KuGouLyricsProvider,
+                                BetterLyricsProvider,
+                                SimpMusicLyricsProvider,
+                                LrcLibLyricsProvider,
+                                YouTubeSubtitleLyricsProvider,
+                                YouTubeLyricsProvider
+                            )
+                            PreferredLyricsProvider.BETTER_LYRICS -> listOf(
+                                BetterLyricsProvider,
+                                SimpMusicLyricsProvider,
+                                LrcLibLyricsProvider,
+                                KuGouLyricsProvider,
+                                YouTubeSubtitleLyricsProvider,
+                                YouTubeLyricsProvider
+                            )
+                            PreferredLyricsProvider.SIMPMUSIC -> listOf(
+                                SimpMusicLyricsProvider,
+                                BetterLyricsProvider,
+                                LrcLibLyricsProvider,
+                                KuGouLyricsProvider,
+                                YouTubeSubtitleLyricsProvider,
+                                YouTubeLyricsProvider
+                            )
+                        }
                     }
+                }.distinctUntilChanged()
+                .collect { providers ->
+                    lyricsProviders = providers
                 }
-            }.distinctUntilChanged()
-            .map { providers ->
-                lyricsProviders = providers
-            }
+        }
+    }
 
     private val cache = LruCache<String, List<LyricsResult>>(MAX_CACHE_SIZE)
     private var currentLyricsJob: Job? = null
