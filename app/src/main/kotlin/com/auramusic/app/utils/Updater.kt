@@ -122,6 +122,7 @@ object Updater {
 
     /**
      * Fetch latest release from GitHub API
+     * Falls back to fetching all releases if latest endpoint fails
      */
     suspend fun getLatestRelease(forceRefresh: Boolean = false): Result<ReleaseInfo> =
         withContext(Dispatchers.IO) {
@@ -131,23 +132,61 @@ object Updater {
                     return@runCatching cachedReleaseInfo!!
                 }
                 
+                // First try the /releases/latest endpoint
                 val request = Request.Builder()
                     .url("$GITHUB_API_BASE/releases/latest")
                     .build()
-                val response = client.newCall(request).execute().body?.string() ?: ""
-                val json = JSONObject(response)
+                val response = client.newCall(request).execute()
+                val body = response.body?.string() ?: ""
                 
-                val releaseInfo = ReleaseInfo(
-                    tagName = json.getString("tag_name"),
-                    versionName = json.getString("name"),
-                    description = json.getString("body"),
-                    releaseDate = json.getString("published_at"),
-                    assets = parseAssets(json.getJSONArray("assets"))
-                )
+                var releaseInfo: ReleaseInfo? = null
                 
-                cachedReleaseInfo = releaseInfo
-                lastCheckTime = System.currentTimeMillis()
-                releaseInfo
+                // Try to parse as latest release
+                if (response.isSuccessful && body.isNotEmpty()) {
+                    try {
+                        val json = JSONObject(body)
+                        if (json.has("tag_name")) {
+                            releaseInfo = ReleaseInfo(
+                                tagName = json.getString("tag_name"),
+                                versionName = json.getString("name"),
+                                description = json.getString("body"),
+                                releaseDate = json.getString("published_at"),
+                                assets = parseAssets(json.getJSONArray("assets"))
+                            )
+                        }
+                    } catch (e: Exception) {
+                        // Failed to parse, will try fallback
+                    }
+                }
+                
+                // Fallback: fetch all releases and use the first one (most recent)
+                if (releaseInfo == null) {
+                    val allReleasesRequest = Request.Builder()
+                        .url("$GITHUB_API_BASE/releases?per_page=1")
+                        .build()
+                    val allReleasesResponse = client.newCall(allReleasesRequest).execute().body?.string() ?: ""
+                    
+                    if (allReleasesResponse.isNotEmpty()) {
+                        val jsonArray = JSONArray(allReleasesResponse)
+                        if (jsonArray.length() > 0) {
+                            val releaseObj = jsonArray.getJSONObject(0)
+                            releaseInfo = ReleaseInfo(
+                                tagName = releaseObj.getString("tag_name"),
+                                versionName = releaseObj.getString("name"),
+                                description = releaseObj.getString("body"),
+                                releaseDate = releaseObj.getString("published_at"),
+                                assets = parseAssets(releaseObj.getJSONArray("assets"))
+                            )
+                        }
+                    }
+                }
+                
+                releaseInfo ?: throw Exception("No releases found")
+            }.also { result ->
+                if (result.isSuccess) {
+                    cachedReleaseInfo = result.getOrNull()
+                    lastCheckTime = System.currentTimeMillis()
+                }
             }
         }
 
