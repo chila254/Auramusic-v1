@@ -5,13 +5,8 @@
 
 package com.auramusic.app.lyrics
 
-import android.content.Context
-import com.auramusic.app.constants.LyricsProviderOrderKey
-import com.auramusic.app.utils.dataStore
-import kotlinx.coroutines.flow.first
-
 object LyricsProviderRegistry {
-    private val providers = mapOf(
+    private val providerMap = mapOf(
         "BetterLyrics" to BetterLyricsProvider,
         "SimpMusic" to SimpMusicLyricsProvider,
         "LrcLib" to LrcLibLyricsProvider,
@@ -20,7 +15,25 @@ object LyricsProviderRegistry {
         "YouTube" to YouTubeLyricsProvider,
     )
 
-    val defaultProviderOrder = listOf(
+    val providerNames = providerMap.keys.toList()
+
+    fun getProviderByName(name: String): LyricsProvider? = providerMap[name]
+
+    fun getProviderName(provider: LyricsProvider): String? =
+        providerMap.entries.find { it.value == provider }?.key
+
+    fun deserializeProviderOrder(orderString: String): List<String> {
+        if (orderString.isBlank()) {
+            return getDefaultProviderOrder()
+        }
+        return orderString.split(",").map { it.trim() }.filter { it in providerNames }
+    }
+
+    fun serializeProviderOrder(providers: List<String>): String {
+        return providers.filter { it in providerNames }.joinToString(",")
+    }
+
+    fun getDefaultProviderOrder(): List<String> = listOf(
         "BetterLyrics",
         "SimpMusic",
         "LrcLib",
@@ -29,30 +42,8 @@ object LyricsProviderRegistry {
         "YouTube",
     )
 
-    fun getProviderByName(name: String): LyricsProvider? = providers[name]
-
     fun getOrderedProviders(orderString: String): List<LyricsProvider> {
         val order = deserializeProviderOrder(orderString)
         return order.mapNotNull { getProviderByName(it) }
-    }
-
-    fun getProviderOrder(): List<String> = defaultProviderOrder
-
-    // Get default provider order (same as getProviderOrder)
-    fun getDefaultProviderOrderList(): List<String> = defaultProviderOrder
-
-    fun serializeProviderOrder(order: List<String>): String = order.joinToString(",")
-
-    fun deserializeProviderOrder(serialized: String?): List<String> {
-        if (serialized.isNullOrBlank()) {
-            return defaultProviderOrder
-        }
-        return serialized.split(",").filter { it.isNotBlank() }
-    }
-
-    suspend fun getProviderOrder(context: Context): List<String> {
-        val data = context.dataStore.data.first()
-        val serialized = data[LyricsProviderOrderKey]
-        return deserializeProviderOrder(serialized)
     }
 }
