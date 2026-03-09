@@ -96,21 +96,21 @@ android {
     signingConfigs {
         create("persistentDebug") {
             storeFile = file("keystore/persistent-debug.keystore")
-            storePassword = "android"
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
+            storePassword = " "
+            keyAlias = " "
+            keyPassword = " "
         }
         create("release") {
             storeFile = file("keystore/release.keystore")
-            storePassword = "auramusic123"
-            keyAlias = "auramusic"
-            keyPassword = "auramusic123"
+            storePassword = " "
+            keyAlias = " "
+            keyPassword = " "
         }
         getByName("debug") {
             storeFile = file("keystore/debug.keystore")
-            storePassword = "android"
-            keyAlias = "auramusicdebug"
-            keyPassword = "android"
+            storePassword = " "
+            keyAlias = " "
+            keyPassword = " "
         }
     }
 
